@@ -1,0 +1,8 @@
+SECRET_KEY: "w_88%^_pbw6!d&rn(!q%*y3kp^(dh8u608_@e4j@)aq57j%-72"
+PROJECT_APPS:
+    - numpwdata.files
+    - numpwdata.densities
+    - numpwdata.operators
+    - numpwdata.convolutions
+ALLOWED_HOSTS: ["*"]
+DEBUG: True
