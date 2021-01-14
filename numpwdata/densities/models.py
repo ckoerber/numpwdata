@@ -2,6 +2,8 @@
 
 from django.db import models
 from espressodb.base.models import Base
+
+from numpwdata.utils.encoders import NympyEncoder
 from numpwdata.files.models import H5File, DatFile
 
 
@@ -23,7 +25,8 @@ class Phenemenological(Interaction):
         max_length=200, help_text="Three-nucleon force used with interaction.",
     )
     misc = models.JSONField(
-        help_text="Miscellaneous information about the interaction."
+        help_text="Miscellaneous information about the interaction.",
+        encoder=NympyEncoder,
     )
 
     class Meta:
@@ -54,9 +57,7 @@ CHIRAL_ORDERS = [
 class Chiral(Interaction):
     """Chiral nuclear interaction."""
 
-    name = models.CharField(
-        max_length=200, help_text="Name of the interaction.", unique=True
-    )
+    name = models.CharField(max_length=200, help_text="Name of the interaction.")
     order = models.CharField(
         max_length=10, help_text="Chiral order.", choices=CHIRAL_ORDERS
     )
@@ -71,7 +72,10 @@ class Chiral(Interaction):
         null=True, blank=True, help_text="Publication associated with the interaction."
     )
     misc = models.JSONField(
-        help_text="Miscellaneous information about the interaction."
+        null=True,
+        blank=True,
+        help_text="Miscellaneous information about the interaction.",
+        encoder=NympyEncoder,
     )
 
     class Meta:
@@ -115,11 +119,22 @@ class Density2N(Density):
     )
     thetaval = models.DecimalField(max_digits=8, decimal_places=4, help_text="?")
     momentum_info = models.JSONField(
+        null=True,
+        blank=True,
         help_text="Momentum mesh used for density representing the matrix.",
+        encoder=NympyEncoder,
     )
-    channel_info = models.JSONField(help_text="Information about quantum channels.")
+    channel_info = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="Information about quantum channels.",
+        encoder=NympyEncoder,
+    )
     mesh_info = models.JSONField(
-        help_text=r"Internal mesh information used to obtain the density"
+        null=True,
+        blank=True,
+        help_text=r"Internal mesh information used to obtain the density",
+        encoder=NympyEncoder,
     )
     file = models.OneToOneField(
         H5File,
@@ -150,12 +165,23 @@ class Density1N(Density):
     )
     thetaval = models.DecimalField(max_digits=8, decimal_places=4, help_text="?")
     momentum_info = models.JSONField(
+        null=True,
+        blank=True,
         help_text="Momentum mesh used for density representing the matrix.",
+        encoder=NympyEncoder,
     )
-    channel_info = models.JSONField(help_text="Information about quantum channels.")
+    channel_info = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="Information about quantum channels.",
+        encoder=NympyEncoder,
+    )
     mesh_info = models.JSONField(
+        null=True,
+        blank=True,
         help_text=r"Internal mesh information used to obtain the density"
         ", e.g., in integrations.",
+        encoder=NympyEncoder,
     )
     file = models.OneToOneField(
         DatFile, on_delete=models.CASCADE, help_text="File information about density.",

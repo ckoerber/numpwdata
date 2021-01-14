@@ -13,6 +13,7 @@ from numpwd.operators import Operator as N_Operator
 from numpwd.operators.h5 import read
 
 from numpwdata.utils.fields import SympyField
+from numpwdata.utils.encoders import NympyEncoder
 from numpwdata.files.models import H5File
 
 
@@ -35,7 +36,12 @@ class Operator2N(Operator):
         " as well as external current information.",
         unique=True,
     )
-    legend = models.JSONField(help_text="A dictinoary explaining the definitions.")
+    legend = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="A dictinoary explaining the definitions.",
+        encoder=NympyEncoder,
+    )
 
 
 class Operator2NPWD(Base):
@@ -51,13 +57,19 @@ class Operator2NPWD(Base):
         help_text="Expression which identifies the operator.",
     )
     qvals = models.JSONField(
-        help_text="Information about the external current momentum exchange range."
+        help_text="Information about the external current momentum exchange range.",
+        encoder=NympyEncoder,
     )
-    args = models.JSONField(help_text="Information about the operator arguments")
+    args = models.JSONField(
+        help_text="Information about the operator arguments", encoder=NympyEncoder,
+    )
     l12_max = models.IntegerField()
     s12_max = models.IntegerField()
     misc = models.JSONField(
-        help_text="Miscellaneous information about the operator like quantum channels."
+        null=True,
+        blank=True,
+        help_text="Miscellaneous information about the operator like quantum channels.",
+        encoder=NympyEncoder,
     )
     file = models.OneToOneField(
         H5File, on_delete=models.CASCADE, help_text="File information about operator.",
@@ -91,4 +103,9 @@ class Operator1N(Operator):
         " nucleon momenta and Pauli spin and isospin matrices"
         " as well as external current information.",
     )
-    legend = models.JSONField(help_text="A dictinoary explaining the definitions.")
+    legend = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="A dictinoary explaining the definitions.",
+        encoder=NympyEncoder,
+    )
