@@ -50,13 +50,16 @@ class Operator2NPWD(Base):
         on_delete=models.CASCADE,
         help_text="Expression which identifies the operator.",
     )
+    qvals = models.JSONField(
+        help_text="Information about the external current momentum exchange range."
+    )
     args = models.JSONField(help_text="Information about the operator arguments")
     l12_max = models.IntegerField()
     s12_max = models.IntegerField()
     misc = models.JSONField(
         help_text="Miscellaneous information about the operator like quantum channels."
     )
-    file = models.ForeignKey(
+    file = models.OneToOneField(
         H5File, on_delete=models.CASCADE, help_text="File information about operator.",
     )
 
