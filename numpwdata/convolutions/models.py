@@ -18,12 +18,12 @@ class CurrentConvolution(Base):
     )
     q = models.DecimalField(
         max_digits=8,
-        decimal_places=4,
+        decimal_places=5,
         help_text="Momentum transfer from operator to density.",
     )
     angle = models.DecimalField(
-        max_digits=8,
-        decimal_places=4,
+        max_digits=5,
+        decimal_places=2,
         help_text="Scattering angle of initial to final scattering momentum in degerees.",
     )
     mj_tot_i_x2 = models.IntegerField(
