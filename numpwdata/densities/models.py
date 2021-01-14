@@ -114,10 +114,10 @@ class Density2N(Density):
     )
     qval = models.DecimalField(
         max_digits=8,
-        decimal_places=4,
+        decimal_places=5,
         help_text="Value of momentum transfer in inverse fermi.",
     )
-    thetaval = models.DecimalField(max_digits=8, decimal_places=4, help_text="?")
+    thetaval = models.DecimalField(max_digits=5, decimal_places=2, help_text="?")
     momentum_info = models.JSONField(
         null=True,
         blank=True,
@@ -160,10 +160,10 @@ class Density1N(Density):
     )
     qval = models.DecimalField(
         max_digits=8,
-        decimal_places=4,
+        decimal_places=5,
         help_text="Value of momentum transfer in inverse fermi.",
     )
-    thetaval = models.DecimalField(max_digits=8, decimal_places=4, help_text="?")
+    thetaval = models.DecimalField(max_digits=5, decimal_places=2, help_text="?")
     momentum_info = models.JSONField(
         null=True,
         blank=True,
