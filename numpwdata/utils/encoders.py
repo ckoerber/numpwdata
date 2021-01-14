@@ -1,6 +1,7 @@
 """Extended json encoders."""
 import json
 import numpy as np
+from sympy import Expr
 
 
 class NympyEncoder(json.JSONEncoder):
@@ -17,5 +18,7 @@ class NympyEncoder(json.JSONEncoder):
             return float(obj)
         elif isinstance(obj, np.ndarray):
             return obj.tolist()
+        elif isinstance(obj, Expr):
+            return str(obj)
         else:
             return super().default(obj)

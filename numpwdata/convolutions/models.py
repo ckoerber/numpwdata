@@ -4,14 +4,16 @@ from django.db import models
 from espressodb.base.models import Base
 
 from numpwdata.densities.models import Density
-from numpwdata.operators.models import Operator
+from numpwdata.operators.models import OperatorPWD
 
 
 class CurrentConvolution(Base):
     """Convolution of operator and density."""
 
     operator = models.ForeignKey(
-        Operator, on_delete=models.CASCADE, help_text="Operator used in computation.",
+        OperatorPWD,
+        on_delete=models.CASCADE,
+        help_text="Operator used in computation.",
     )
     density = models.ForeignKey(
         Density, on_delete=models.CASCADE, help_text="Density used in computation.",

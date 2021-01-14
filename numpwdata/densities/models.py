@@ -1,10 +1,14 @@
 """Models for densities and interactions."""
+from socket import gethostname
 
 from django.db import models
 from espressodb.base.models import Base
 
 from numpwdata.utils.encoders import NympyEncoder
 from numpwdata.files.models import H5File, DatFile
+
+from numpwd.densities.base import Density as N_Density
+from numpwd.densities.h5 import read_h5
 
 
 class Interaction(Base):
@@ -142,6 +146,14 @@ class Density2N(Density):
         help_text="File information about density.",
         unique=True,
     )
+
+    def read_h5(self) -> N_Density:
+        """Read the density from h5 File if existent."""
+        if gethostname() != self.file.hostname:
+            raise RuntimeError(
+                "Operator stored on different host: {self.file.hostname}"
+            )
+        return read_h5(self.file.path)
 
 
 class Density1N(Density):

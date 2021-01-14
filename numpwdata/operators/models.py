@@ -44,7 +44,11 @@ class Operator2N(Operator):
     )
 
 
-class Operator2NPWD(Base):
+class OperatorPWD(Base):
+    """Base implementation of operator partial wave decompositions."""
+
+
+class Operator2NPWD(OperatorPWD):
     """Partial wave decomposed two-nucleon operator for external currents pointing to a file.
 
     The operators are presented in
@@ -56,19 +60,22 @@ class Operator2NPWD(Base):
         on_delete=models.CASCADE,
         help_text="Expression which identifies the operator.",
     )
-    qvals = models.JSONField(
-        help_text="Information about the external current momentum exchange range.",
+    args = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="Information about the operator arguments",
         encoder=NympyEncoder,
     )
-    args = models.JSONField(
-        help_text="Information about the operator arguments", encoder=NympyEncoder,
-    )
-    l12_max = models.IntegerField()
-    s12_max = models.IntegerField()
     misc = models.JSONField(
         null=True,
         blank=True,
         help_text="Miscellaneous information about the operator like quantum channels.",
+        encoder=NympyEncoder,
+    )
+    mesh_info = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="Information about the operator integration meshes.",
         encoder=NympyEncoder,
     )
     file = models.OneToOneField(
@@ -85,6 +92,9 @@ class Operator2NPWD(Base):
                 "Operator stored on different host: {self.file.hostname}"
             )
         return read(self.file.path)
+
+    def __str__(self):
+        return f"Operator2NPWD({self.operator.name}, {self.file.path})"
 
 
 class Operator1N(Operator):
