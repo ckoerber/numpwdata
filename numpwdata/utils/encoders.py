@@ -20,5 +20,7 @@ class NympyEncoder(json.JSONEncoder):
             return obj.tolist()
         elif isinstance(obj, Expr):
             return str(obj)
+        elif isinstance(obj, bytes):
+            return str(obj)
         else:
             return super().default(obj)
