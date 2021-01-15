@@ -25,4 +25,5 @@ setup(
     keywords=[],
     packages=find_packages(),
     install_requires=REQUIREMENTS,
+    entry_points={"console_scripts": ["numpwdata=numpwdata.manage:main"]},
 )
