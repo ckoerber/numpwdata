@@ -1,10 +1,14 @@
 """Models for densities and interactions."""
+import re
 from socket import gethostname
+
+from numpy import array
 
 from django.db import models
 from espressodb.base.models import Base
 
 from numpwdata.utils.encoders import NympyEncoder
+from numpwdata.utils.parsing import parse_fortran_funny
 from numpwdata.files.models import H5File, DatFile
 
 from numpwd.densities.base import Density as N_Density
@@ -198,3 +202,30 @@ class Density1N(Density):
     file = models.OneToOneField(
         DatFile, on_delete=models.CASCADE, help_text="File information about density.",
     )
+
+    def read_dat(self):
+        """Read in one-body density files."""
+        pattern = r"MAXRHO1BINDEX\s+\=\s+(?P<max_rho_index>[0-9]+)"
+        pattern += r".*"
+        pattern += r"RHO1BINDX\s+\=(?P<rho_index>[0-9\*\,\-\s]+)"
+        pattern += r".*"
+        pattern += r"\/\s+(?P<om_theta>[0-9\.\-\+E ]+\n)"
+        pattern += r"\s+(?P<rho>[0-9\.\-\+E\s]+\n)"
+
+        dtypes = {
+            "max_rho_index": int,
+            "om_theta": lambda el: array([float(ee) for ee in el.split(" ") if ee]),
+            "rho": lambda el: array([float(ee) for ee in el.split(" ") if ee]),
+            "rho_index": parse_fortran_funny,
+        }
+
+        with open(self.file.path, "r") as inp:
+            t = inp.read()
+        dd = re.search(pattern, t, re.MULTILINE | re.DOTALL).groupdict()
+        for key, val in dtypes.items():
+            dd[key] = val(dd[key])
+
+        channels = dd["rho_index"].copy()
+        channels["rho"] = dd["rho"]
+        dd["channels"] = channels
+        return dd
