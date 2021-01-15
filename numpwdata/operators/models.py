@@ -14,7 +14,7 @@ from numpwd.operators.h5 import read
 
 from numpwdata.utils.fields import SympyField
 from numpwdata.utils.encoders import NympyEncoder
-from numpwdata.files.models import H5File
+from numpwdata.files.models import H5File, ModuleFunction
 
 
 class Operator(Base):
@@ -104,7 +104,9 @@ class Operator1N(Operator):
     <a href="https://arxiv.org/abs/1704.01150">arxiv:1704.01150</a>.
     """
 
-    name = models.CharField(max_length=100, help_text="Name of the operator.")
+    name = models.CharField(
+        max_length=100, help_text="Name of the operator.", unique=True
+    )
     equation = SympyField(
         encoder="expression",
         null=True,
@@ -112,6 +114,7 @@ class Operator1N(Operator):
         help_text="Describes the operator as a function of in- and outgoing"
         " nucleon momenta and Pauli spin and isospin matrices"
         " as well as external current information.",
+        unique=True,
     )
     legend = models.JSONField(
         null=True,
@@ -119,3 +122,41 @@ class Operator1N(Operator):
         help_text="A dictinoary explaining the definitions.",
         encoder=NympyEncoder,
     )
+
+
+class Operator1NPWD(OperatorPWD):
+    """Partial wave decomposed one-nucleon operator for external currents.
+
+    The pwd is implemented in a module function.
+    """
+
+    operator = models.ForeignKey(
+        Operator1N,
+        on_delete=models.CASCADE,
+        help_text="Expression which identifies the operator.",
+    )
+    misc = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="Miscellaneous information about the operator like quantum channels.",
+        encoder=NympyEncoder,
+    )
+    function = models.OneToOneField(
+        ModuleFunction,
+        on_delete=models.CASCADE,
+        help_text="Python module function implementing the PWD.",
+    )
+
+    class Meta:
+        unique_together = ["operator", "function"]
+
+    def read_h5(self) -> N_Operator:
+        """Read the operator from h5 File if existent."""
+        if gethostname() != self.file.hostname:
+            raise RuntimeError(
+                "Operator stored on different host: {self.file.hostname}"
+            )
+        return read(self.file.path)
+
+    def __str__(self):
+        return f"Operator1NPWD({self.operator.name}, {self.function})"

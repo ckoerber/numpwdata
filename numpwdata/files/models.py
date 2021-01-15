@@ -1,5 +1,6 @@
 """File models."""
 from socket import gethostname
+from importlib import import_module
 
 from django.db import models
 from espressodb.base.models import Base
@@ -41,3 +42,40 @@ class DatFile(File):
             "path",
             "hostname",
         ]
+
+
+class ModuleFunction(File):
+    """Function inside a Python module."""
+
+    module_name = models.TextField(help_text="Python module import name (using '.')")
+    function_name = models.TextField(
+        help_text="Name of the function inside the module."
+    )
+    version = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Tag defining the version of the function used."
+        " Not yet used on import",
+    )
+
+    def __init__(self, *args, **kwargs):
+        """Add empty _fcn attribute."""
+        super().__init__(*args, **kwargs)
+        self._fcn = None
+
+    @property
+    def function(self):
+        """Import the function from module."""
+        if self._fcn is None:
+            module = import_module(self.module_name)
+            self._fcn = getattr(module, self.function_name)
+        return self._fcn
+
+    def call(self, *args, **kwargs):
+        """Call the linked function."""
+        return self.function(*args, **kwargs)
+
+    def __str__(self):
+        """Return name as a python import string."""
+        version = f" @{self.version}" if self.version else ""
+        return f"{self.module_name}.{self.function_name}{version}"
