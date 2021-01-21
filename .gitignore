@@ -1,6 +1,6 @@
 db-config.yaml
 .ipynb_checkpoints
 __pycache__
-**/migrations/0*.py
+
 *.sqlite
 *.egg-info
