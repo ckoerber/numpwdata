@@ -8,7 +8,7 @@ It allows you to search available data by keywords and read corresponding files 
 
 All the dependencies are `pip` installable
 
-1. Clone [`numpwd`](https://git.noc.ruhr-uni-bochum.de/nuc/numpwd) and `pip install` it (needed for reading h5 files)
+1. Clone [`numpwd`](https://git.noc.ruhr-uni-bochum.de/nuc/numpwd), checkout the `operator-math` branch and `pip install` it (needed for reading h5 files)
 2. Run `pip install [--user] [-e] .` in this directory
 
 ## Setup
