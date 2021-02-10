@@ -203,8 +203,14 @@ class Density1N(Density):
         DatFile, on_delete=models.CASCADE, help_text="File information about density.",
     )
 
-    def read_dat(self):
+    def read_dat(self, check_host: bool = True):
         """Read in one-body density files."""
+
+        if check_host and gethostname() != self.file.hostname:
+            raise RuntimeError(
+                "Operator stored on different host: {self.file.hostname}"
+            )
+
         pattern = r"MAXRHO1BINDEX\s+\=\s+(?P<max_rho_index>[0-9]+)"
         pattern += r".*"
         pattern += r"RHO1BINDX\s+\=(?P<rho_index>[0-9\*\,\-\s]+)"
