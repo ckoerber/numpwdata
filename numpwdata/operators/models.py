@@ -85,11 +85,11 @@ class Operator2NPWD(OperatorPWD):
     class Meta:
         unique_together = ["operator", "file"]
 
-    def read_h5(self) -> N_Operator:
+    def read_h5(self, check_host: bool = True) -> N_Operator:
         """Read the operator from h5 File if existent."""
-        if gethostname() != self.file.hostname:
+        if check_host and gethostname() != self.file.hostname:
             raise RuntimeError(
-                "Operator stored on different host: {self.file.hostname}"
+                f"Operator stored on different host: {self.file.hostname}"
             )
         return read(self.file.path)
 
