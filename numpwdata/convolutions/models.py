@@ -35,6 +35,10 @@ class CurrentConvolution(Base):
         help_text="Outgoing total spin polarization of nucleus.", null=True, blank=True
     )
     value = models.FloatField(help_text="Value of the matrix element.")
+    value_imag = models.FloatField(
+        null=True, blank=True, help_text="Imaginary value of the matrix element."
+    )
+
     date = models.DateTimeField(auto_now=True, help_text="Date last modified.")
 
     class Meta:
