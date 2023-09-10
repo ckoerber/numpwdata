@@ -1,5 +1,7 @@
 # Database interface to nuclear density data
 
+**Note: This repository is not beeing maintained as of 2022.**
+
 `numpwdata` is a Python [ORM](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping) using [EspressoDB](https://espressodb.readthedocs.io/en/latest/) (and as such [Django](https://www.djangoproject.com/)) to store and interface information about nuclear wave functions and operators in a partial wave basis.
 
 It allows you to search available data by keywords and read corresponding files into memory.
